@@ -1,4 +1,4 @@
-from extract_service import ExtractService
+from .extract_service import ExtractService
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from pandas import DataFrame

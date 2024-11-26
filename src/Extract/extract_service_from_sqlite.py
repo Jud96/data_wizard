@@ -1,4 +1,4 @@
-from extract_service import ExtractService
+from .extract_service import ExtractService
 import pandas as pd
 import sqlite3
 
@@ -10,6 +10,6 @@ class ExtractServiceFromsqlite(ExtractService):
     def extract(self):
         conn = sqlite3.connect(self.db_path)
         data = pd.read_sql_query(self.query, conn)
-        data['source'] = 'SQL'
+        data['source'] = 'sql'
         conn.close()
         return data

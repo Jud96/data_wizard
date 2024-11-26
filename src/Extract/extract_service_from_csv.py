@@ -1,4 +1,4 @@
-from extract_service import ExtractService
+from .extract_service import ExtractService
 import pandas as pd
 
 class ExtractServiceFromCSV(ExtractService):

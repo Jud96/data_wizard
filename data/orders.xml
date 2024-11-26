@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<data>
+  <row>
+    <index>0</index>
+    <id>1</id>
+    <date>2024-07-01</date>
+    <quantity>10.0</quantity>
+    <price>9.99</price>
+  </row>
+  <row>
+    <index>1</index>
+    <id>2</id>
+    <date>2024-07-02</date>
+    <quantity>15.0</quantity>
+    <price>19.99</price>
+  </row>
+  <row>
+    <index>2</index>
+    <id>3</id>
+    <date>2024-07-03</date>
+    <quantity>7.0</quantity>
+    <price>14.99</price>
+  </row>
+  <row>
+    <index>3</index>
+    <id>4</id>
+    <date>2024-07-04</date>
+    <quantity/>
+    <price>29.99</price>
+  </row>
+  <row>
+    <index>4</index>
+    <id>5</id>
+    <date>2024-07-05</date>
+    <quantity>20.0</quantity>
+    <price>9.99</price>
+  </row>
+</data>

@@ -1,4 +1,5 @@
-from extract_service import ExtractService
+from .extract_service import ExtractService
+import pandas as pd
 
 class ExtractServiceFromParquet(ExtractService):
     def __init__(self, file_path):

@@ -1,4 +1,3 @@
-from extract_service import ExtractService
 from abc import abstractmethod
 
 class ExtractService:
