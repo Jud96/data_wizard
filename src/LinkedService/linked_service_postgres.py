@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from LinkedService.linked_service_to_db import LinkedServiceToDB
+from src.LinkedService.linked_service_to_db import LinkedServiceToDB
 
 
 class LinkedServicePostgres(LinkedServiceToDB):

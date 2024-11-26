@@ -1,5 +1,5 @@
 import pymongo
-from LinkedService.linked_service_to_db import LinkedServiceToDB
+from src.LinkedService.linked_service_to_db import LinkedServiceToDB
 
 
 class LinkedServiceToMongoDB(LinkedServiceToDB):

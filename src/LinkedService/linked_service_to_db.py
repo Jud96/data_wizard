@@ -1,4 +1,5 @@
-from LinkedService.linked_service import LinkedService
+from abc import abstractmethod
+from .linked_service import LinkedService
 
 class LinkedServiceToDB(LinkedService):
     pass
