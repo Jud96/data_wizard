@@ -9,6 +9,7 @@ class LinkedServiceS3(LinkedServiceToDataLake):
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
         self.region_name = region_name
+        self.conn = self.connect()
 
     def connect(self):
         try:
@@ -25,7 +26,7 @@ class LinkedServiceS3(LinkedServiceToDataLake):
 
     def get_metadata(self):
         try:
-            s3 = self.connect()
+            s3 = self.conn
             response = s3.list_objects_v2(Bucket=self.bucket_name)
             metadata = []
             if 'Contents' in response:
