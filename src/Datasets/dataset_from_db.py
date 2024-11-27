@@ -31,4 +31,27 @@ class DatasetFromDB(Dataset):
         cursor.close()
         return df
 
-   
+    def load(self, data):
+        cursor = self.conn.cursor()
+        try:
+            # Insert bulk data to PostgreSQL
+            data = data.values.tolist()  # Assuming `self.data` is a DataFrame-like object
+            print(data)
+            for row in data:
+                try:
+                    # Use parameterized queries to prevent SQL injection
+                    query = sql.SQL('INSERT INTO {} VALUES ({})').format(
+                        sql.Identifier(self.table_name),
+                        sql.SQL(', ').join(sql.Placeholder() * len(row))
+                    )
+                    print(query)
+                    cursor.execute(query, row)
+                except Exception as e:
+                    print(f"Error inserting row {row}: {e}")
+                    self.conn.rollback()  # Rollback on individual row failure to ensure database consistency
+            self.conn.commit()  # Commit after processing all rows
+        except Exception as e:
+            print(f"Error during data loading: {e}")
+            self.conn.rollback()
+        finally:
+            cursor.close()
