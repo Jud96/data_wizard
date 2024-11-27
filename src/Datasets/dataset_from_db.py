@@ -74,4 +74,54 @@ class DatasetFromDB(Dataset):
         finally:
             cursor.close()
 
+    def delta_load(self, data, key_columns):
+        """
+        Performs a delta load: Inserts new records and updates existing records based on key columns.
 
+        :param dataset: An object containing `conn` (database connection) and `table_name` (target table name).
+        :param data: A DataFrame-like object with the data to be loaded.
+        :param key_columns: A list of column names to use as unique keys for conflict resolution.
+        """
+        cursor = self.conn.cursor()
+        try:
+            # Convert data to a list of lists for efficient processing
+            data_list = data.values.tolist()
+            columns = data.columns  # Assuming data is a DataFrame with `.columns` attribute
+
+            # Generate SQL components
+            insert_columns = sql.SQL(", ").join(sql.Identifier(col) for col in columns)
+            placeholders = sql.SQL(", ").join(sql.Placeholder() for _ in columns)
+            conflict_columns = sql.SQL(", ").join(sql.Identifier(col) for col in key_columns)
+            update_assignments = sql.SQL(", ").join(
+                sql.Composed([sql.Identifier(col), sql.SQL(" = EXCLUDED."), sql.Identifier(col)])
+                for col in columns if col not in key_columns
+            )
+
+            # Prepare the query
+            query = sql.SQL("""
+                INSERT INTO {table} ({insert_columns})
+                VALUES ({placeholders})
+                ON CONFLICT ({conflict_columns})
+                DO UPDATE SET {update_assignments};
+            """).format(
+                table=sql.Identifier(self.table_name),
+                insert_columns=insert_columns,
+                placeholders=placeholders,
+                conflict_columns=conflict_columns,
+                update_assignments=update_assignments
+            )
+
+            # Execute the query for each row
+            for row in data_list:
+                cursor.execute(query, row)
+
+            # Commit the transaction
+            self.conn.commit()
+        except Exception as e:
+            print(f"Error during data loading: {e}")
+            self.conn.rollback()  # Rollback the transaction on error
+        finally:
+            cursor.close()
+
+    def close(self):
+        self.conn.close()
