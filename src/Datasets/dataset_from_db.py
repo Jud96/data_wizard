@@ -36,7 +36,6 @@ class DatasetFromDB(Dataset):
         try:
             # Insert bulk data to PostgreSQL
             data = data.values.tolist()  # Assuming `self.data` is a DataFrame-like object
-            print(data)
             for row in data:
                 try:
                     # Use parameterized queries to prevent SQL injection
@@ -55,3 +54,24 @@ class DatasetFromDB(Dataset):
             self.conn.rollback()
         finally:
             cursor.close()
+
+    def load_bulk(self, data):
+        cursor = self.conn.cursor()
+        
+        try:
+            # Insert bulk data to PostgreSQL
+            data = data.values.tolist()  # Assuming `self.data` is a DataFrame-like object
+            query = sql.SQL('INSERT INTO {} VALUES ({})').format(
+                sql.Identifier(self.table_name),
+                sql.SQL(', ').join(sql.Placeholder() * len(data[0]))
+            )
+            print(query)
+            cursor.executemany(query, data)
+            self.conn.commit()  # Commit after processing all rows
+        except Exception as e:
+            print(f"Error during data loading: {e}")
+            self.conn.rollback()
+        finally:
+            cursor.close()
+
+
