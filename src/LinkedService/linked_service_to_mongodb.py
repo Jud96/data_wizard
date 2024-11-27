@@ -9,6 +9,7 @@ class LinkedServiceToMongoDB(LinkedServiceToDB):
         self.password = password
         self.host = host
         self.port = port
+        self.conn = self.connect()
 
     def connect(self):
         try:
@@ -22,13 +23,12 @@ class LinkedServiceToMongoDB(LinkedServiceToDB):
 
     def get_metadata(self):
         try:
-            conn = self.connect()
-            collections = conn.list_collection_names()
+            collections = self.conn.list_collection_names()
             metadata = []
             for collection in collections:
                 metadata.append({
                     'collection': collection,
-                    'count': conn[collection].count_documents({})
+                    'count': self.conn[collection].count_documents({})
                 })
             return metadata
         except Exception as e:
